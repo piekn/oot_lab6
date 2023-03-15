@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Interpreter</title>
+</head>
+<body>
+Enter sequence of commands for virtual robot:<br>
+    <textarea id="input" cols="30" rows="10"></textarea>
+    <button onclick="runInterpreter()">Run</button>
+    <div id="output"></div>
+    <script>
+        class RobotCommandInterpreter {
+            interpret(commands) {
+                const outputElement = document.getElementById("output");
+                outputElement.textContent = "";
+                for (const command of commands) {
+                    command.execute();
+                }
+            }
+        }
+
+        class ForwardCommand {
+            execute() {
+                const outputElement = document.getElementById("output");
+                outputElement.textContent += "Moving forward...\n";
+            }
+        }
+
+        class BackwardCommand {
+            execute() {
+                const outputElement = document.getElementById("output");
+                outputElement.textContent += "Moving backward...\n";
+            }
+        }
+
+        class LeftCommand {
+            execute() {
+                const outputElement = document.getElementById("output");
+                outputElement.textContent += "Turning left...\n";
+            }
+        }
+
+        class RightCommand {
+            execute() {
+                const outputElement = document.getElementById("output");
+                outputElement.textContent += "Turning right...\n";
+            }
+        }
+
+        class Parser {
+            constructor() {
+                this.commands = [];
+            }
+
+            parse(input) {
+                const parts = input.trim().split(/\s+/);
+                for (const part of parts) {
+                    switch (part.toLowerCase()) {
+                        case "forward":
+                            this.commands.push(new ForwardCommand());
+                            break;
+                        case "backward":
+                            this.commands.push(new BackwardCommand());
+                            break;
+                        case "left":
+                            this.commands.push(new LeftCommand());
+                            break;
+                        case "right":
+                            this.commands.push(new RightCommand());
+                            break;
+                        default:
+                            console.warn(`Unrecognized command: ${part}`);
+                            break;
+                    }
+                }
+            }
+
+            getCommands() {
+                return this.commands;
+            }
+        }
+
+        function runInterpreter() {
+            const inputElement = document.getElementById("input");
+            const interpreter = new RobotCommandInterpreter();
+            const parser = new Parser();
+            parser.parse(inputElement.value);
+            const commands = parser.getCommands();
+            interpreter.interpret(commands);
+        }
+    </script>
+</body>
+</html>
